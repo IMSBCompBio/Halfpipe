@@ -29,8 +29,7 @@ In general Halfpipe is invoked with the `halfpipe.py` script:
 user@foo:~$ python3 src/halfpipe.py subcommand  
 ```
 
-A detailed description of the available sub-commands can be found below. But first we want to emphasize the use of the 
-of the `config.yml` file. This file contains all the parameters that the user needs to specify, and here is a snippet to show 
+A detailed description of the available sub-commands can be found below. But first we want to emphasize the use of the `config.yml` file. This file contains all the parameters that the user needs to specify, and here is a snippet to show 
 what this file looks like:
 
 ```yaml
