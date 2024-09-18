@@ -69,7 +69,7 @@ Further parameters such as the library type and the desired model can be configu
 
 ### pipe
 
-The “pipe” subcommand executes the entire pipeline for a 4sU time-series experiment. It maps (using NextGenMap) and filters reads from Fastq raw files, corrects the data for potential SNPs and RNA tagging sites, and counts the T>C conversion induced by 4sU labeling. Halfpipe uses these counts to estimate the proportions of newly synthesized reads over time (EM algorithm) before fitting either a one- or two-compartment model of RNA metabolism to these quantities.
+The “pipe” subcommand executes the entire pipeline for a 4sU time-series experiment. It maps (using NextGenMap) and filters reads from Fastq raw files, corrects the data for potential SNPs and RNA editing sites, and counts the T>C conversion induced by 4sU labeling. Halfpipe uses these counts to estimate the proportions of newly synthesized reads over time (EM algorithm) before fitting either a one- or two-compartment model of RNA metabolism to these quantities.
 
 Usage: 
 
