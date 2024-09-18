@@ -51,7 +51,7 @@ output: path/to/outputdirectory/ # output directory
 In general, we advise to only work with absolute
 instead of relative paths! 
 
-The parameter `samples` defines the path to the fastq files (TSV format required!). You can view sample sheets in the `docs` folder, namely `docs/mocksamplesheet_singleend.tsv` and `docs/mocksamplesheet_pairedend.tsv`. Column 1 (and 2, in the case of paired-end data) defines the path to the fastq(.gz) samples, while the last two columns define the measurement time in minutes and a descriptive name for the sample for later readability.
+The parameter `samples` defines the path to the sample-sheet (TSV format required!) which lists the corresponding fastq(.gz)-files. You can view sample sheets in the `docs` folder, namely `docs/mocksamplesheet_singleend.tsv` and `docs/mocksamplesheet_pairedend.tsv`. Column 1 (and 2, in the case of paired-end data) defines the path to the fastq(.gz) samples, while the last two columns define the measurement time in minutes and a descriptive name for the sample for later readability.
 
 The parameter “bed” specifies the path to the BED file containing genomically coordinated, annotated 3'UTRs. Such a file can be downloaded from the [UCSC Table Browser](https://genome.ucsc.edu/cgi-bin/hgTables).
 
