@@ -7,7 +7,7 @@ import pysam
 from readpreprocessing import r_to_c_hg38
 
 
-def read_pair_generator(bam, region_string=None): # copied from Biostars
+def read_pair_generator(bam, region_string=None): # copied from Biostars: https://www.biostars.org/p/306041/
     """
     Generate read pairs in a BAM file or within a region string.
     Reads are added to read_dict until a pair is found.
