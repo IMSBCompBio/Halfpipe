@@ -69,7 +69,7 @@ Further parameters such as the library type and the desired model can be configu
 
 ### pipe
 
-The “pipe” subcommand executes the entire pipeline for a 4sU time-series experiment. It maps (using NextGenMap) and filters reads from Fastq raw files, corrects the data for potential SNPs and RNA editing sites, and counts the T>C conversion induced by 4sU labeling. Halfpipe uses these counts to estimate the proportions of newly synthesized reads over time (EM algorithm) before fitting either a one- or two-compartment model of RNA metabolism to these quantities.
+The `pipe` subcommand executes the entire pipeline for a 4sU time-series experiment. It maps (using NextGenMap) and filters reads from Fastq raw files, corrects the data for potential SNPs and RNA editing sites, and counts the T>C conversion induced by 4sU labeling. Halfpipe uses these counts to estimate the proportions of newly synthesized reads over time (EM algorithm) before fitting either a one- or two-compartment model of RNA metabolism to these quantities.
 
 Usage: 
 
@@ -91,7 +91,7 @@ user@foo:~$ python3 halfpipe.py mapandfilter
 
 ### readpreprocess
 
-The subcommand “readpreprocess” is used to identify putative editing sites (including SNPs, A-to-I editing sites, etc.) from control samples. This step is crucial for the later calculation of the labeling efficiency with the `ratioestimation` subcommand. If this step is not performed, false-positive T>C conversions would bias the downstream analyses. The output files can be found in the `readpreprocess/` subfolder.
+The subcommand `readpreprocess` is used to identify putative editing sites (including SNPs, A-to-I editing sites, etc.) from control samples. This step is crucial for the later calculation of the labeling efficiency with the `ratioestimation` subcommand. If this step is not performed, false-positive T>C conversions would bias the downstream analyses. The output files can be found in the `readpreprocess/` subfolder.
 
 
 ```console
@@ -120,7 +120,7 @@ user@foo:~$ python3 halfpipe.py createsummary
 
 ### fitparameters
 
-The subcommand `fitparameters` applies either the one- or two-compartment model to estimate the RNA half-lives. The output files can be found in the “parameterfit/” subfolder.
+The subcommand `fitparameters` applies either the one- or two-compartment model to estimate the RNA half-lives. The output files can be found in the `parameterfit/` subfolder.
  
 
 Usage: 
