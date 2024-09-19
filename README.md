@@ -1,6 +1,6 @@
 # Halfpipe
 
-Halfpipe is designed for the estimation of RNA half-lives from time course data of RNA labeling protocols such as [SLAM-seq](https://www.nature.com/articles/nmeth.4435) or [TimeLapse-seq](https://www.nature.com/articles/nmeth.4582). The pipeline builds on the modeling framework presented in [Müller *et al.* (2024)](https://doi.org/10.1371/journal.pcbi.1012059). To this end, it automates essential pre-processing, model fitting and post-processing steps. Please read the last [pre-print]() for more information about the underlying methodology of Halfpipe. 
+Halfpipe is designed for the estimation of RNA half-lives from time course data of RNA labeling protocols such as [SLAM-seq](https://www.nature.com/articles/nmeth.4435) or [TimeLapse-seq](https://www.nature.com/articles/nmeth.4582). The pipeline builds on the modeling framework presented in [Müller *et al.* (2024)](https://doi.org/10.1371/journal.pcbi.1012059). To this end, it automates essential pre-processing, model fitting and post-processing steps. Please read our latest [pre-print]() for more information about the underlying methodology of Halfpipe. 
 
 
 
