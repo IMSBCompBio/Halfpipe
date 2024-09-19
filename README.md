@@ -11,7 +11,7 @@ Halfpipe is designed for the estimation of RNA half-lives from time course data 
 ## Setup
 
 Simply download this repository to a location of your choice. We recommend a high performance machine. A sample script `slurm_example.sh` that you can customize to run Halfpipe with the widely used [SLURM workload manager](https://slurm.schedmd.com/documentation.html) is located in the `docs/` folder. 
-Next, set up the conda environment using the `halfpipe_condaenv.yml` file in the `config/` folder:
+Next, set up a [conda](https://docs.conda.io/projects/conda/en/stable/) environment using the `halfpipe_condaenv.yml` file in the `config/` folder:
 
 ```console
 user@foo:~$ conda env create --file=config/halfpipe_condaenv.yml  
