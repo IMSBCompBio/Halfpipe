@@ -35,6 +35,10 @@ with open("config/config.yml", "r") as configfile:
 
 # helper functions -----------------------------------------------------------------------------------------------------
 def read_input(input):
+    """
+    Extract samples according to the inputsamplesheet.tsv file
+    """
+
     filename, fileextension = os.path.splitext(input)
     if fileextension == '.tsv':
         filterstrategy = config["params"]["filterstrategy"]
@@ -61,6 +65,10 @@ def read_input(input):
         raise ValueError('Input file must be tsv.')
 
 def summary_input(input):
+    """
+    Processes summaryfile.tsv to match samples for downstream modeling purposes.
+    """
+
     filename, fileextension = os.path.splitext(input)
     if fileextension == '.tsv':
         tsv_file = open(input)
@@ -90,7 +98,6 @@ def summary_input(input):
 def MapAndFilter():
     """
     Wrapper that calls NGM for Mapping and Specific filtering criteria.
-    :return:
     """
 
     # Mapping
@@ -122,8 +129,6 @@ def MapAndFilter():
         os.makedirs(f"{config['output']}/filtering")
     output_filtering = f"{config['output']}/filtering/"
 
-
-
     for bam in bamfiles:
         FilterReads(inbam=bam, outbam=output_filtering, readfilter=config['params']['filterstrategy'])
 
@@ -137,6 +142,9 @@ def MapAndFilter():
     return None
 
 def ReadPreProcess():
+    """
+    Wrapper that computes sequencing errors from the sequencing data.
+    """
 
     if not os.path.exists(f"{config['output']}/readpreprocess"):
         os.makedirs(f"{config['output']}/readpreprocess")
@@ -154,6 +162,9 @@ def ReadPreProcess():
     return None
 
 def RatioEstimation():
+    """
+    Wrapper that estimates the proportion of newly synthesized transcripts per 3'UTR over time
+    """
 
     if not os.path.exists(f"{config['output']}/ratioestimation"):
         os.makedirs(f"{config['output']}/ratioestimation")
@@ -167,6 +178,9 @@ def RatioEstimation():
     return None
 
 def SummaryFiles(summarysamples):
+    """
+    Wrapper that summarizes the estimation results.
+    """
 
     if not os.path.exists(f"{config['output']}/summaryfiles"):
         os.makedirs(f"{config['output']}/summaryfiles")
@@ -176,6 +190,9 @@ def SummaryFiles(summarysamples):
     return None
 
 def FitParameters(timepoints):
+    """
+    Wrapper that calls either a one- or two-compartment model to estimate transcript dynamics.
+    """
 
     if not os.path.exists(f"{config['output']}/parameterfit"):
         os.makedirs(f"{config['output']}/parameterfit")
@@ -199,7 +216,9 @@ else:
 # Running the pipeline -------------------------------------------------------------------------------------------------
 
 def pipe():
-
+    """
+    Function that defines the whole pipeline.
+    """
 
     if not os.path.isdir(config['output']):
         os.makedirs(config['output'])
@@ -261,4 +280,4 @@ def pipe():
 
 
 if __name__ == '__main__':
-    pipe()
+    pipe() # run an grab a coffee
