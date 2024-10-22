@@ -14,7 +14,7 @@ def MapReads(
     readfilter="singleend"
 ):
     """
-        This function specifies the necessary parameters to run NGM for sequence alignment of the corresponding SLAM-seq data.
+    This function specifies the necessary parameters to run NGM for sequence alignment of the corresponding SLAM-seq data.
     """
 
     if readfilter == "pairedend" or readfilter == "pseudosingleend":
@@ -86,7 +86,7 @@ def plot_mappedreads(
     """
     A simple plotting function to visualized the mapping results.
     """
-    
+
     mapped_reads = []
     unmapped_reads = []
     ambiguous_reads = []
