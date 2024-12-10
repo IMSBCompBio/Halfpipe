@@ -11,7 +11,7 @@ output: path/to/outputdirectory/ # output directory
 
 params:
   cores: 1 # number of cores for multi-processing
-  gpus: null # if CUDA GPUs are available, specify numer here
+  gpus: null # if CUDA GPUs are available, specify number here
   readorientation: reverse # alternative: forward
   filterstrategy: pseudosingleend # alternative: singleend
   model: twocompartment # or choose 'onecompartment'
