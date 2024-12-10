@@ -351,15 +351,16 @@ def load_summary_table(infile):
 
 def CreateSummaryFiles(input, config):
 
-    if config['params']['model'] == "onecompartment":
-        input = input.iloc[:, 0].tolist()
-    if config['params']['model'] == "twocompartment":
-        input = input.iloc[:, 0].tolist() + input.iloc[:, 1].tolist()
+   
+    if config['params']['filterstrategy'] == "singleend":
+        libfactor = 1
+    else: 
+        libfactor = 2
     summaryfiles = []
-    print(input)
+
     for file in input:
         task = pysam.view('-c', f"{config['output']}/filtering/{file}_mapped_filtered.bam")
-        libsize = int(task) / 2
+        libsize = int(task) / libfactor
         summaryfile = f"{config['output']}/summaryfiles/{file}_summarytable_globalem.tsv"
         new_summary_table(summaryfile,
                           file, libsize,
@@ -369,7 +370,6 @@ def CreateSummaryFiles(input, config):
 
     merged_summary_table(mode="merge", stable_files=summaryfiles, outfile=f"{config['output']}/summaryfiles/{config['input']['summaryname']}.tsv")
     summaryfiles = np.array(summaryfiles)
-    print(summaryfiles)
     summaryfiles = np.delete(summaryfiles, [0, int(np.shape(summaryfiles)[0]/2)])
     merged_summary_table(mode="merge", stable_files=summaryfiles, outfile=f"{config['output']}/summaryfiles/{config['input']['summaryname']}_nocontrol.tsv")
 

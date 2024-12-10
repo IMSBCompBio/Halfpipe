@@ -5,7 +5,6 @@ input:
   bed: path/to/3UTR.bed
   refgenome: path/to/genome.fa
   snps: path/to/SNPfile.vcf
-  summmaryfile: path/to/summaryfile.tsv
   summaryname: yoursamplename
 
 output: path/to/outputdirectory/ # output directory

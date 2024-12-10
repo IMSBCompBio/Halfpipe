@@ -21,17 +21,18 @@ source("src/fit_functions.R")
 
 # Load Data --------------------------------------------------------------------
 
-print(args$timepoints)
+tp <- sort(as.numeric(args$timepoints))
+print(tp)
 
 if (args$model == "onecompartment") {
   
   cat("Loading Raw Data:\n")
   rawdata <- summarytable_to_rawdata_onecompartment(
     summarytable_file = args$input,
-    timepoints = args$timepoints
+    timepoints = tp
   )
   cat("Data loaded.\n")
-  genes <- rownames(rawdata$tot_total)[1:5]
+  genes <- rownames(rawdata$tot_total)
   
   # Estimation -----------------------------------------------------------------
   
@@ -129,13 +130,12 @@ if (args$model == "onecompartment") {
   results_table <- data.frame(results_table)
   colnames(results_table) <- column_names
   rownames(results_table) <- genes
-  print(results_table)
   
   # Create Half-Life table with reliability criteria ---------------------------
   
   elvl_regression <- expr_level_regression_onecompartment(
     args$input,
-    time_series = args$timepoints,
+    time_series = tp,
     norm = "avg"
   )
   
@@ -143,7 +143,7 @@ if (args$model == "onecompartment") {
     rawdata = rawdata,
     estimation_results = results_table,
     elvl_regression = elvl_regression,
-    timepoints = args$timepoints,
+    timepoints = tp,
     min_cov = 30,
     max_elvl_slope_stringent = 0.002,
     max_elvl_slope_lessstringent = 0.0025,
@@ -171,10 +171,10 @@ if (args$model == "twocompartment") {
   cat("Loading Raw Data:\n")
   rawdata <- summarytable_to_rawdata(
     summarytable_file = args$input,
-    timepoints = args$timepoints
+    timepoints = tp
   )
   cat("Data loaded.\n")
-  genes <- rownames(rawdata$tot_cy)[1:5]
+  genes <- rownames(rawdata$tot_cy)
   
   # Estimation -----------------------------------------------------------------
   
@@ -200,7 +200,7 @@ if (args$model == "twocompartment") {
     fit <- tryCatch(
       {fit <- fitGene(
         gene,
-        args$timepoints,
+        tp,
         rawdata,
         distinct_samples = 10^4,
         include_samples = T
@@ -286,13 +286,12 @@ if (args$model == "twocompartment") {
   results_table <- data.frame(results_table)
   colnames(results_table) <- column_names
   rownames(results_table) <- genes
-  print(results_table)
   
   # Create Half-Life table with reliability criteria ---------------------------
   
   elvl_regression <- expr_level_regression(
     args$input,
-    time_series = args$timepoints,
+    time_series = tp,
     norm = "avg"
   )
   
@@ -300,7 +299,7 @@ if (args$model == "twocompartment") {
     rawdata = rawdata,
     estimation_results = results_table,
     elvl_regression = elvl_regression,
-    timepoints = args$timepoints,
+    timepoints = tp,
     min_cov = 30,
     max_elvl_slope_stringent = 0.002,
     max_elvl_slope_lessstringent = 0.0025,
