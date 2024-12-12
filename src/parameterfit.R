@@ -58,7 +58,7 @@ if (args$model == "onecompartment") {
     fit <- tryCatch(
       {fit <- fitGene_onecompartment(
         gene,
-        c(15,30,45),
+        tp,
         rawdata,
         distinct_samples = 10^4,
         include_samples = T
