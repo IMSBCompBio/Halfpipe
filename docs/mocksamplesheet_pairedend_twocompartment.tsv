@@ -1,0 +1,6 @@
+/path/to/sample0/sample0_R1.fastq	/path/to/sample0/sample0_R1.fastq	0	nuclearsample0 nucleus
+/path/to/sample1/sample1_R1.fastq	/path/to/sample0/sample1_R1.fastq	15	nuclearsample1 nucleus
+/path/to/sample2/sample2_R1.fastq	/path/to/sample0/sample2_R1.fastq	30	nuclearsample2 nucleus
+/path/to/sample0/sample0_R1.fastq	/path/to/sample0/sample0_R1.fastq	0	cytosolicsample0 cytosol
+/path/to/sample1/sample1_R1.fastq	/path/to/sample0/sample1_R1.fastq	15	cytosolicsample1 cytosol
+/path/to/sample2/sample2_R1.fastq	/path/to/sample0/sample2_R1.fastq	30	cytosolicsample2 cytosol

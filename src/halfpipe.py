@@ -226,7 +226,7 @@ def SummaryFiles():
     summarysamples = []
     if config['params']['model'] == "twocompartment":
         files = samples[0] + samples[1]
-        index = 2
+        index = 3
     else: 
         files = samples[0]
         index = 2
