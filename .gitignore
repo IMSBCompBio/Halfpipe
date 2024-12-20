@@ -3,7 +3,7 @@
 ruff.toml
 
 # The docs/ and config/ folders should not be synced automatically
-#docs/
+docs/
 config/
 
 # Byte-compiled / optimized / DLL files

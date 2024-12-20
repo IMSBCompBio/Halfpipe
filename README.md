@@ -63,11 +63,12 @@ output: path/to/outputdirectory/ # output directory
 In general, we advise to only work with absolute
 instead of relative paths! 
 
-The parameter `samples` defines the path to the sample-sheet (TSV format required!) which lists the corresponding fastq(.gz)-files. You can view sample sheets in the `docs` folder, namely `docs/mocksamplesheet_singleend.tsv` and `docs/mocksamplesheet_pairedend.tsv`. Column 1 (and 2, in the case of paired-end data) defines the path to the fastq(.gz) samples, while the last two columns define the measurement time in minutes and a descriptive name for the sample for later readability.
+The parameter `samples` defines the path to the sample-sheet (TSV format required!) which lists the corresponding fastq(.gz)-files. You can view examplary sample sheets in the `docs` folder, namely `docs/mocksamplesheet_singleend_onecompartment.tsv`, `docs/mocksamplesheet_singleend_twocompartment.tsv`, `docs/mocksamplesheet_pairedend_onecompartment.tsv`, and `docs/mocksamplesheet_pairedend_twocompartment.tsv`. Column 1 (and 2, in the case of paired-end data) defines the path to the fastq(.gz) samples, while the columns define the measurement time in minutes, a descriptive sample name for readability, and information about the respective compartment of the two-compartment model (either "nucleus" or "cytosol", specify nuclear samples first).
 
-The parameter “bed” specifies the path to the BED file containing genomically coordinated, annotated 3'UTRs. Such a file can be downloaded from the [UCSC Table Browser](https://genome.ucsc.edu/cgi-bin/hgTables).
 
-The parameter “Refgenome” defines the path to the fasta file of the reference genome. Please use the [RefSeq](https://www.ncbi.nlm.nih.gov/refseq/) genome fasta for GRCh38. 
+The parameter `bed` specifies the path to the BED file containing genomically coordinated, annotated 3'UTRs. Such a file can be downloaded from the [UCSC Table Browser](https://genome.ucsc.edu/cgi-bin/hgTables).
+
+The parameter `refgenome` defines the path to the fasta file of the reference genome. Please use the [RefSeq](https://www.ncbi.nlm.nih.gov/refseq/) genome fasta for GRCh38. 
 
 The parameter `snps` defines the path to the SNP annotation file in VCF format. You can download this file from the [NCBI SNPdb](https://www.ncbi.nlm.nih.gov/snp/) database. 
 
