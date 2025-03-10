@@ -1,5 +1,5 @@
 import gzip
-from misc import r_to_c_hg38, chr_numbers_hs
+from misc import r_to_c_hg38, r_to_c_m39, chr_numbers_mm, chr_numbers_hs
 import multiprocessing as mp
 import os
 import pickle
@@ -139,7 +139,7 @@ def read_table(mode, bamfile, reffile, bedfile, snpfile=None, coverage=1, refnam
 
             if readfilter == 'pseudosingleend':
                 if not read.is_read1:
-                    continue
+                    continue5
 
             read_id = read.query_name  # read ID
             if read_id not in read_regions:
@@ -1072,12 +1072,12 @@ def str_is_int(s):
 
 # Wrapper --------------------------------------------------------------------------------------------------------------
 
-def create_editfile(inbam, ref, bed, snp, readtable, editsites, readfilter):
+def create_editfile(inbam, ref, bed, snp, readtable, editsites, readfilter, refname_to_chr, chr_numbers):
     print(f"Creating Read Table for {os.path.basename(inbam)}...", file=sys.stderr)
     read_table_file = read_table('snp_all_summary', bamfile=inbam, reffile=ref, bedfile=bed, snpfile=snp, coverage=20,
-                                 refname_to_chr=r_to_c_hg38, readfilter=readfilter)
+                                 refname_to_chr=refname_to_chr, readfilter=readfilter)
     write_read_table(r_table=read_table_file, outfile=readtable)
-    write_edit_sites(readtable, 0.05, editsites)
+    write_edit_sites(readtable, 0.05, editsites, chr_numbers=chr_numbers)
 
     return None
 
@@ -1122,14 +1122,23 @@ def PreProcessReads(
         bedfile,
         snpfile,
         threads=1,
-        refname_to_chr=r_to_c_hg38,
+        org='human',
         readfilter='singleend'
 ):
 
-    bam = f"{output}filtering/{control}_mapped_filtered.bam"
-    readtable = f"{output}readpreprocess/{control}_readtable.txt"
-    editsites = f"{output}readpreprocess/{control}_editfile.txt"
-    editfile = f"{output}readpreprocess/{control}_alleditsites.pkl"
+    if org == 'human':
+        refname_to_chr = r_to_c_hg38
+        chr_num = chr_numbers_hs
+    elif org == 'mouse':
+        refname_to_chr = r_to_c_m39
+        chr_num = chr_numbers_mm
+    else:
+        raise ValueError("Organism should be 'human' or 'mouse'")
+
+    bam = f"{output}/filtering/{control}_mapped_filtered.bam"
+    readtable = f"{output}/readpreprocess/{control}_readtable.txt"
+    editsites = f"{output}/readpreprocess/{control}_editfile.txt"
+    editfile = f"{output}/readpreprocess/{control}_alleditsites.pkl"
 
     print("Detecting Editing Sites...", file=sys.stderr)
     create_editfile(
@@ -1139,7 +1148,9 @@ def PreProcessReads(
         snp=snpfile,
         readtable=readtable,
         editsites=editsites,
-        readfilter=readfilter
+        readfilter=readfilter,
+        refname_to_chr=refname_to_chr,
+        chr_numbers= chr_num
     )
 
     print(f"Creating Editing Site File with {int(threads)} Cores...", file=sys.stderr)

@@ -1,20 +1,21 @@
 ---
  
 input:
-  samples: path/to/inputsamplesheet.tsv
-  bed: path/to/3UTR.bed
-  refgenome: path/to/genome.fa
-  snps: path/to/SNPfile.vcf
-  summaryname: yoursamplename
+  samples: /projects/ag-tresch/Thanina/hpt/samplesheet.tsv
+  bed: /projects/ag-tresch/Thanina/hpt/mouse_bed.bed
+  refgenome: /projects/ag-tresch/Thanina/hpt/mouse_genome.bed
+  snps: /projects/ag-tresch/Thanina/hpt/00-All.vcf
+  summaryname: halfpipetest
 
-output: path/to/outputdirectory/ # output directory
+output: /projects/ag-tresch/Thanina/hpt/out/ # output directory
 
 params:
-  cores: 1 # number of cores for multi-processing
+  cores: 3 # number of cores for multi-processing
   gpus: null # if CUDA GPUs are available, specify number here
   readorientation: reverse # alternative: forward
-  filterstrategy: pseudosingleend # alternative: singleend
-  model: twocompartment # or choose 'onecompartment'
+  filterstrategy: singleend # alternative: singleend
+  model: onecompartment # or choose 'onecompartment'
+  organism: mouse # or choose 'mouse'
 
 emparams:
   uridinethreshold: 30

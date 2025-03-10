@@ -11,6 +11,8 @@ from ratioestimation import EstimateRatios
 from readpreprocessing import PreProcessReads
 import sys
 import yaml
+from misc import r_to_c_m39, r_to_c_hg38
+from multiprocessing import set_start_method
 
 # Creating parser ------------------------------------------------------------------------------------------------------
 
@@ -53,10 +55,10 @@ def read_input(input):
             read_tsv = csv.reader(tsv_file, delimiter='\t')
             if model == "twocompartment":
                 expectedcolumns = 5 
-                ems = 'Input tsv-file is not of format read1.fastg(.gz)\tread2.fastg(.gz)\ttimepoint\toutname\tcompartment.'
+                ems = 'Input tsv-file is not of format read1.fastq(.gz)\tread2.fastq(.gz)\ttimepoint\toutname\tcompartment.'
             else: 
                 expectedcolumns = 4
-                ems = 'Input tsv-file is not of format read1.fastg(.gz)\tread2.fastg(.gz)\ttimepoint\toutname.'
+                ems = 'Input tsv-file is not of format read1.fastq(.gz)\tread2.fastq(.gz)\ttimepoint\toutname.'
             
             for pair in read_tsv:
                 if len(pair) != expectedcolumns:
@@ -71,10 +73,10 @@ def read_input(input):
             read_tsv = csv.reader(tsv_file, delimiter='\t')
             if model == "twocompartment":
                 expectedcolumns = 4 
-                ems = 'Input tsv-file is not of format read1.fastg(.gz)\ttimepoint\toutname\tcompartment.'
+                ems = 'Input tsv-file is not of format read1.fastq(.gz)\ttimepoint\toutname\tcompartment.'
             else: 
                 expectedcolumns = 3
-                ems = 'Input tsv-file is not of format read1.fastg(.gz)\ttimepoint\toutname.'
+                ems = 'Input tsv-file is not of format read1.fastq(.gz)\ttimepoint\toutname.'
             for pair in read_tsv:
                 if len(pair) != expectedcolumns:
                     raise ValueError(ems)
@@ -156,6 +158,7 @@ def MapAndFilter():
         bamfiles = [f"{config['output']}/mapping/{file[3]}_mapped.bam" for file in files]
     else:
         bamfiles = [f"{config['output']}/mapping/{file[2]}_mapped.bam" for file in files]
+
     plot_mappedreads(bamfiles=bamfiles, labels=info, output=config['output'])
 
     # Filtering
@@ -164,8 +167,16 @@ def MapAndFilter():
         os.makedirs(f"{config['output']}/filtering")
     output_filtering = f"{config['output']}/filtering/"
 
+    org = config['params']['organism']
+    if org == "human":
+        refname_to_chr = r_to_c_hg38
+    elif org == "mouse":
+        refname_to_chr = r_to_c_m39
+    else:
+        raise ValueError("Organism must be 'human' or 'mouse'")
+
     for bam in bamfiles:
-        FilterReads(inbam=bam, outbam=output_filtering, readfilter=config['params']['filterstrategy'])
+        FilterReads(inbam=bam, outbam=output_filtering, readfilter=config['params']['filterstrategy'], refname_to_chr=refname_to_chr)
 
     if config['params']['filterstrategy'] == 'pairedend' or config['params']['filterstrategy'] == 'pseudosingleend':
         bamfiles = [f"{config['output']}/filtering/{file[3]}_mapped_filtered.bam" for file in files]
@@ -193,7 +204,8 @@ def ReadPreProcess():
             bedfile=config['input']['bed'],
             snpfile=config['input']['snps'],
             threads=config['params']['cores'],
-            readfilter=config['params']['filterstrategy']
+            readfilter=config['params']['filterstrategy'],
+            org = config['params']['organism']
         )
 
     return None
@@ -272,8 +284,8 @@ def pipe():
             os.makedirs(config['output'])
 
         print("##### PRE-PROCESSING #####\n", file=sys.stdout)
-        MapAndFilter()
-        ReadPreProcess()
+        #MapAndFilter()
+        #ReadPreProcess()
 
         print("##### MODELING #####\n", file=sys.stdout)
         RatioEstimation()
@@ -306,4 +318,5 @@ def pipe():
 
 
 if __name__ == '__main__':
-    pipe() # run an grab a coffee
+    set_start_method("spawn", force=True)
+    pipe() # run and grab a coffee

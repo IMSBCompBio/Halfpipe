@@ -786,7 +786,6 @@ summarytable_to_rawdata_onecompartment <- function(summarytable_file, timepoints
   rownames(ratio_total) <- region_names
   
   # filling matrices
-  
   for (i in 1:n_regions) {  # iterating through number of genomic regions
     
     total_startidx = (i-1) * n_measurements + 1     # start of nuclear measurements' data rows

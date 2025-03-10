@@ -4,7 +4,7 @@ import numpy as np
 import os
 import pandas as pd
 import pysam
-from readpreprocessing import r_to_c_hg38
+from readpreprocessing import r_to_c_hg38, r_to_c_m39
 
 def FilterReads(
     inbam,

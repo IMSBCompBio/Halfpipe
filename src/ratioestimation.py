@@ -1,5 +1,5 @@
 import gzip
-from misc import r_to_c_hg38
+from misc import r_to_c_hg38, r_to_c_m39
 import multiprocessing as mp
 import numpy as np
 import pandas as pd
@@ -9,6 +9,8 @@ from scipy.stats import binom
 import scipy.special
 import scipy.optimize as op
 import sys
+from multiprocessing import set_start_method, get_context
+
 
 def snp_corrected_rsummary(bamfile, reffile, snps_ai, outfile, refname_to_chr=r_to_c_hg38,
                            readfilter='singleend'):
@@ -67,11 +69,17 @@ def antisense_sense_rsummary(bamfile, rsummary_infile, bedfile, antisense_outfil
     """
 
     genomic_regions = filter_regions(bamfile, bedfile, refname_to_chr=refname_to_chr, readfilter=readfilter, read_orientation=read_orientation)
+    print("filter genomic regions", file=sys.stderr)
     genomic_regions = filter_coverage(genomic_regions, coverage=coverage)
+    print("filter coverage", file=sys.stderr)
     original_rsummary = load_r_summary(rsummary_infile)
+    print("load original r summary", file=sys.stderr)
     antisense_sense_separation = antisense_sense_transcripts(original_rsummary, genomic_regions)
+    print("separating antisense and sense transcripts", file=sys.stderr)
     write_r_summary(antisense_sense_separation[0], antisense_outfile)
+    print("writing antisense file", file=sys.stderr)
     write_r_summary(antisense_sense_separation[1], sense_outfile)
+    print("writing sense file", file=sys.stderr)
     return()
 
 def read_summary(bamfile, reffile, snps_ai, refname_to_chr=r_to_c_hg38, readfilter='singleend'):
@@ -330,7 +338,7 @@ def filter_regions(bamfile, bedfile, refname_to_chr=r_to_c_hg38, readfilter='sin
         elif read_orientation == "forward":
             read_o = "-" if read.is_reverse else "+" # no need to reverse oif FWD kits are used
         else:
-            raise ValueError("Read orientation must be specifies with 'reverse' or 'forward'")
+            raise ValueError("Read orientation must be specified with 'reverse' or 'forward'")
 
         ref_start = read.reference_start            # reference alignment start, 0-based, including
         ref_end = read.reference_end                # reference alignment end, 0-based, excluding
@@ -1630,18 +1638,37 @@ def write_summary_table(stable, outfile):
 
 def read_summary_wrapper(infile):
 
+    print(f"summary wrapper says infile 17 is {infile[17]}", file=sys.stderr)
+
+    if infile[17] == 'human':
+        refname_to_chr = r_to_c_hg38
+    elif infile[17] == 'mouse':
+        refname_to_chr = r_to_c_m39
+        print('mouse organism used', file=sys.stderr)
+    else:
+        raise ValueError('organism must be human or mouse')
+
     snp_corrected_rsummary(
         bamfile=infile[0],
         reffile=infile[1],
         snps_ai=infile[3],
         outfile=infile[4],
-        readfilter=infile[12]
+        readfilter=infile[12],
+        refname_to_chr=refname_to_chr
     )
-
+    print('snp corrected', file=sys.stderr)
     return None
 
 
 def antisense_sense_wrapper(infile):
+    if infile[17] == 'human':
+        refname_to_chr = r_to_c_hg38
+    elif infile[17] == 'mouse':
+        refname_to_chr = r_to_c_m39
+        print('mouse organism used', file=sys.stderr)
+    else:
+        raise ValueError('organism must be human or mouse')
+
     antisense_sense_rsummary(
         bamfile=infile[0],
         rsummary_infile=infile[4],
@@ -1650,7 +1677,10 @@ def antisense_sense_wrapper(infile):
         sense_outfile=infile[6],
         coverage=1,
         readfilter=infile[12],
-        read_orientation=infile[16])
+        read_orientation=infile[16],
+        refname_to_chr=refname_to_chr)
+
+    print('antisense summary', file=sys.stderr)
     return None
 
 
@@ -1773,23 +1803,25 @@ def EstimateRatios(samples, control, config):
             f"{config['output']}ratioestimation/{sample[indicator2]}_conversionstats.csv",
             f"{config['output']}ratioestimation/{sample[indicator2]}_conversionstats_barplot.png",
             f"{config['output']}ratioestimation/{sample[indicator2]}_labelingefficiencies.pkl",
-            config['params']['readorientation']
+            config['params']['readorientation'],
+            config['params']['organism']
 
         ]
         for sample in samples
     ]
 
 
+
     print("Creating Conversion Count Tables...", file=sys.stderr)
-    with mp.Pool(processes=int(config['params']['cores'])) as pool:
+    with mp.get_context("spawn").Pool(processes=int(config['params']['cores'])) as pool:
         pool.map(read_summary_wrapper, input_files)
 
     print("Separating Reads By Strand Orientation...", file=sys.stderr)
-    with mp.Pool(processes=int(config['params']['cores'])) as pool:
-        pool.map(antisense_sense_wrapper, input_files)
+    with mp.get_context("spawn").Pool(processes=int(config['params']['cores'])) as pool:
+        pool.map(antisense_sense_wrapper, input_files) # problem is here, fsr it stops computing ?????
 
     print("Creating Conversion Count Tables...", file=sys.stderr)
-    with mp.Pool(processes=int(config['params']['cores'])) as pool:
+    with mp.get_context("spawn").Pool(processes=int(config['params']['cores'])) as pool:
         pool.map(new_convcount_table_wrapper, input_files)
 
     conv_files = []
@@ -1817,7 +1849,8 @@ def EstimateRatios(samples, control, config):
             f"{config['output']}ratioestimation/{sample[indicator2]}_labelingefficiencies.pkl",
             common_regions,
             config['emparams']['uridinethreshold'],
-            config['emparams']['minimumcoverage']
+            config['emparams']['minimumcoverage'],
+            config['params']['organism']
 
         ]
         for sample in samples
