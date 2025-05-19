@@ -284,8 +284,8 @@ def pipe():
             os.makedirs(config['output'])
 
         print("##### PRE-PROCESSING #####\n", file=sys.stdout)
-        #MapAndFilter()
-        #ReadPreProcess()
+        MapAndFilter()
+        ReadPreProcess()
 
         print("##### MODELING #####\n", file=sys.stdout)
         RatioEstimation()
