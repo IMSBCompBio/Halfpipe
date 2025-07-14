@@ -1,4 +1,4 @@
-from misc import r_to_c_hg38
+from misc import r_to_c_hg38, r_to_c_m39
 import numpy as np
 import pysam
 
@@ -150,6 +150,7 @@ def load_convcount_table(infile):
     >read_id\n
     number_of_potential_conversion_positions\tnumber_of_conversions\n
     """
+
 
     in_file = open(infile)  # opening conversion counts table file
     convcounts_table = {}   # initialize empty conversion counts table hash
@@ -358,6 +359,13 @@ def CreateSummaryFiles(input, config):
         libfactor = 2
     summaryfiles = []
 
+    if config['params']['organism']== "human":
+        refname_dict = r_to_c_hg38
+    elif config['params']['organism']== "mouse":
+        refname_dict = r_to_c_m39
+    else:
+        raise ValueError("Organism not recognized, please enter either 'mouse' or 'human' in config file")
+
     for file in input:
         task = pysam.view('-c', f"{config['output']}/filtering/{file}_mapped_filtered.bam")
         libsize = int(task) / libfactor
@@ -365,12 +373,17 @@ def CreateSummaryFiles(input, config):
         new_summary_table(summaryfile,
                           file, libsize,
                           f"{config['output']}/ratioestimation/{file}_convcount.txt",
-                          cetable_file=f"{config['output']}/ratioestimation/{file}_convratio.txt")
+                          cetable_file=f"{config['output']}/ratioestimation/{file}_convratio.txt",
+                          refname_to_chr=refname_dict)
         summaryfiles.append(summaryfile)
 
     merged_summary_table(mode="merge", stable_files=summaryfiles, outfile=f"{config['output']}/summaryfiles/{config['input']['summaryname']}.tsv")
     summaryfiles = np.array(summaryfiles)
-    summaryfiles = np.delete(summaryfiles, [0, int(np.shape(summaryfiles)[0]/2)])
+
+    if config['params']['model'] == "onecompartment":
+        summaryfiles = np.delete(summaryfiles, [0])
+    else:
+        summaryfiles = np.delete(summaryfiles, [0, int(np.shape(summaryfiles)[0]/2)])
     merged_summary_table(mode="merge", stable_files=summaryfiles, outfile=f"{config['output']}/summaryfiles/{config['input']['summaryname']}_nocontrol.tsv")
 
 

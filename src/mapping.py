@@ -45,7 +45,7 @@ def MapReads(
 
     elif readfilter == "singleend":
         print("Running NGM in single-end mode...")
-        bamfile = f"{output}/mapping/{sample[2]}_mapped.bam"
+        bamfile = f"{output}mapping/{sample[2]}_mapped.bam"
 
         if threads is not None and gpus is None:
             task = f"ngm -q {sample[0]} -r {refgenome} -o {bamfile} -5 12 -n 100 -b --slam-seq 2 --max-polya 4 --strata -l --rg-id readgroup --rg-sm NA:NA:NA -t {threads}"
